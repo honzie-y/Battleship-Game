@@ -4,8 +4,8 @@ import NavBar from "./components/NavBar";
 const Header = () => {
   return (
     <>
-    <header className="pt-[20px] flex flex-row justify-between">
-        <img className="filter-(--filter-logo)" src="/src/assets/battleshiponline-logo.png" alt="battleship-logo"/>
+    <header className="pt-[20px] flex flex-row justify-between mb-6">
+        <img className="filter-(--filter-logo) rounded-xl" src="/src/assets/battleshiponline-logo.png" alt="battleship-logo"/>
         <NavBar />
     </header>
 
