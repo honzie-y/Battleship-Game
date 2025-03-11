@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+@theme {
+  --breakpoint-sm: 600px;
+  --breakpoint-md: 1000px;
+  
+  --filter-logo: sepia(60%) grayscale(30%);
+}
+
+:root {
+  background-color: #342f2f;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+@media screen and (width <= 600px) {
+  body {
+    padding-inline: 10px;
+  }
+}
+
+@media screen and (width > 600px) and (width <= 1000px) {
+  body {
+    padding-inline: 30px;
+  }
+}
+
+@media screen and (width > 1000px) {
+  body {
+    padding-inline: 50px;
+  }
+}
