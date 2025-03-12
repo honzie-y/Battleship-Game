@@ -10,8 +10,10 @@ function App() {
       <Routes>
         <Route element={<Header />}>
           <Route path="/" element={<Home />}/>
-          <Route path="/game-rules" element={<GameRules/>}/>
-          <Route path="/high-scores" element={<HighScores />}/>
+          <Route path="/easy" />
+          <Route path="/normal"/>
+          <Route path="/rules" element={<GameRules/>}/>
+          <Route path="/highscores" element={<HighScores />}/>
         </Route>
       </Routes>
     </>

@@ -7,11 +7,11 @@ const links = [
     },
     {
         name: "Game Rules",
-        path: "/game-rules"
+        path: "/rules"
     },
     {
         name: "High Scores",
-        path: "/high-scores"
+        path: "/highscores"
     }
 ]
 
