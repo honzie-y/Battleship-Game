@@ -6,14 +6,18 @@
   --breakpoint-sm: 600px;
   --breakpoint-md: 1000px;
   
+  
   --filter-logo: sepia(60%) grayscale(30%);
   --font-rubik-pixels: "Rubik Pixels", sans-serif;
   --font-barrio: "Barrio", system-ui;
+
+  --color-primary:#342f2f;
+  --color-secondary: #8d8c8c;
 }
 
 :root {
   background-color: #342f2f;
-  color:rgb(141, 140, 140);
+  color:#8d8c8c;
   font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
