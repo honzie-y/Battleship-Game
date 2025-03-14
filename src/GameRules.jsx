@@ -2,7 +2,7 @@
 
 const GameRules = () => {
   return (
-    <div className="text-[16px] sm:text-[18px] mt-3">
+    <div className="text-[16px] sm:text-[18px] mt-4">
         <p>
             Battleship is a two-player strategy game where each player 
             has a fleet of ships placed on a grid. The traditional game 
