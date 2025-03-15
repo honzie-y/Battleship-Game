@@ -12,24 +12,24 @@ const Games = () => {
 
     const [myGrids, setMyGrids] = useState(() => {
         const initialValue = [];
-        for(let i = 0; i < columns; i++) {
-            const columns = [];
-            for(let j = 0; j < rows; j++) {
-                columns.push("blank");
+        for(let i = 0; i < rows; i++) {
+            const row = [];
+            for(let j = 0; j < columns; j++) {
+                row.push("blank");
             }
-            initialValue.push(columns);
+            initialValue.push(row);
         }
         return initialValue;
     });
 
     const [enemyGrids, setEnemyGrids] = useState(() => {
         const initialValue = [];
-        for(let i = 0; i < columns; i++) {
-            const columns = [];
-            for(let j = 0; j < rows; j++) {
-                columns.push("blank");
+        for(let i = 0; i < rows; i++) {
+            const row = [];
+            for(let j = 0; j < columns; j++) {
+                row.push("blank");
             }
-            initialValue.push(columns);
+            initialValue.push(row);
         }
         return initialValue;
     });

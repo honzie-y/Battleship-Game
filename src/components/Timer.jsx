@@ -11,10 +11,16 @@ const Timer = ({isRunning}) => {
         intervalId = setInterval(() => {
             setTime(prevTime => prevTime + 1000);
         }, 1000);
+    } else {
+        reset(); // ** use this design for now, may change later
     }
 
     return () => clearInterval(intervalId);
   }, [isRunning]);
+
+  const reset = () => {
+    setTime(0);
+  }
 
   const formatTime = () => {
     const seconds = `${Math.floor((time / 1000) % 60)}`.padStart(2, '0');
