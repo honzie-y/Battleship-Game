@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Timer from './components/Timer';
+import GridBoard from './components/GridBoard';
 
 const Games = () => {
     const location = useLocation();
@@ -45,39 +46,8 @@ const Games = () => {
         <button className='text-xl sm:text-2xl mt-5 border-3 px-2 hover:bg-yellow-800 cursor-pointer'>Start Game</button>
 
         <div className='flex flex-col items-center sm:flex-row sm:justify-center sm:gap-20 md:gap-50'>
-            <div className='w-fit mt-6'>
-                <h1 className='text-xl sm:text-2xl'>Enemy Board</h1>
-                {enemyGrids.map((column, columnIndex) => {
-                    return (
-                        <div className='grid grid-cols-10 cursor-pointer' key={columnIndex}>
-                            {
-                                column.map((row, rowIndex) => {
-                                    return (
-                                        <div key={rowIndex} className='bg-secondary w-6.5 h-6.5 md:w-8 md:h-8 border-2 border-primary rounded-[4px]'>&nbsp;</div>
-                                    )
-                                })
-                            }
-                        </div>
-                    )
-                })}
-            </div>
-
-            <div className='w-fit mt-6'>
-                <h1 className='text-xl sm:text-2xl'>My Board</h1>
-                {myGrids.map((column, columnIndex) => {
-                        return (
-                            <div className='grid grid-cols-10 cursor-pointer' key={columnIndex}>
-                                {
-                                    column.map((row, rowIndex) => {
-                                        return (
-                                            <div key={rowIndex} className='bg-secondary w-6.5 h-6.5 md:w-8 md:h-8 border-2 border-primary rounded-[4px]'>&nbsp;</div>
-                                        )
-                                    })
-                                }
-                            </div>
-                        )
-                    })}
-            </div>
+            <GridBoard playerBoard={enemyGrids} playerWho={"Enemy Board"}/>
+            <GridBoard playerBoard={myGrids} playerWho={"My Board"}/>
         </div>
     </div>
   )
