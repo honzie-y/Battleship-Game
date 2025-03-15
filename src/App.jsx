@@ -11,8 +11,8 @@ function App() {
       <Routes>
         <Route element={<Header/>}>
           <Route path="/" element={<Home/>}/>
-          <Route path="/easy" element={<Games/>}/>
-          <Route path="/normal" element={<Games/>}/>
+          <Route path="/game/easy" element={<Games/>}/>
+          <Route path="/game/normal" element={<Games/>}/>
           <Route path="/rules" element={<GameRules/>}/>
           <Route path="/highscores" element={<HighScores />}/>
         </Route>
