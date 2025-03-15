@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import Timer from './components/Timer';
 
 const Games = () => {
     const location = useLocation();
@@ -39,7 +40,7 @@ const Games = () => {
         {path === "/game/easy" && <h1 className='mt-3 font-barrio text-2xl sm:text-3xl bg-yellow-800 w-fit px-3'>Easy Mode</h1>}
         {path === "/game/normal" && <h1 className='mt-3 font-barrio text-2xl sm:text-3xl bg-yellow-800 w-fit px-3'>Normal Mode</h1>}
         
-        <div className='fixed left-5 top-18 sm:top-30 bg-yellow-800/50 px-2 rounded-[5px] sm:text-xl'>Timer: 15:20:20</div>
+        <div className='fixed left-5 top-18 sm:top-30 bg-yellow-800/50 px-2 rounded-[5px] sm:text-xl'><Timer isRunning={false}/></div>
         
         <button className='text-xl sm:text-2xl mt-5 border-3 px-2 hover:bg-yellow-800 cursor-pointer'>Start Game</button>
 
