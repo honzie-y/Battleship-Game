@@ -10,7 +10,7 @@ const GridBoard = ({playerBoard, playerWho, whosTurn, throwBomb, hitStart, path,
                             return (
                                 <div key={`${rowIndex}-${columnIndex}`} 
                                 className='bg-secondary w-6.5 h-6.5 md:w-8 md:h-8 border-2 border-primary 
-                                rounded-[4px]' onClick={() => throwBomb(rowIndex, columnIndex)}>
+                                rounded-[4px] hover:bg-yellow-800' onClick={() => throwBomb(rowIndex, columnIndex)}>
                                     {(playerBoard[rowIndex][columnIndex] === 'ship' && playerWho === 'My Board' && 
                                     <img src="/src/assets/dot-icon.png"></img> ) ||
                                     (playerBoard[rowIndex][columnIndex] === 'hit' && <img src="/src/assets/check-icon.png"></img>) ||

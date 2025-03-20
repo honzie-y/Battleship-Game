@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import Timer from './components/Timer';
 import GridBoard from './components/GridBoard';
 import Ships from './components/Ships';
+import Alert from './components/Alert';
 
 const Games = () => {
     const location = useLocation();
@@ -11,11 +12,9 @@ const Games = () => {
 
     const [gameEnter, setGameEnter] = useState(false);
 
-    const [restart, setRestart] = useState(false);
-
     const [hitStart, setHitStart] = useState(false);
 
-    const [turn, setTurn] = useState("Enemy Board");
+    const [turn, setTurn] = useState('Enemy Board');
 
     const [placed, setPlaced] = useState(false);
 
@@ -32,6 +31,8 @@ const Games = () => {
     const [time, setTime] = useState(0);
 
     const [myThrew, setMyThrew] = useState(false);
+
+    const [winner, setWinner] = useState('');
 
     useEffect(() => {
         let intervalId;
@@ -178,19 +179,18 @@ const Games = () => {
            
             if(turn === "My Board") {
                 setEnemyGrids(newGrids);
+                setMyThrew(true);
                 if(path === '/game/normal') {
-                    setMyThrew(true);
-                    setTimeout(() => setTurn("Enemy Board"), 1000); 
+                    setTimeout(() => setTurn("Enemy Board"), 500); 
                 } else {
                     setTurn("Enemy Board");
                 }
             } else {
+                setMyThrew(false);
+                setMyGrids(newGrids);
                 if(path === '/game/normal') {
-                    setTimeout(() => setMyGrids(newGrids), 1000);
-                    setMyThrew(false);
-                    setTimeout(() => setTurn("My Board"), 2000);
+                    setTimeout(() => setTurn("My Board"), 1000);
                 } else {
-                    setMyGrids(newGrids);
                     setTurn("My Board");
                 }
                 
@@ -201,7 +201,6 @@ const Games = () => {
     const hitOrPause = () => {
         //if(placed === true) {
             setHitStart(!hitStart);
-            setRestart(false);
             if(turn === 'Enemy Board') setTurn('My Board');
         //}   
     };
@@ -229,10 +228,10 @@ const Games = () => {
         }
 
     const clickReset = () => {
-        setRestart(true);
         setHitStart(false);
         setPlaced(false);
         setSomeoneWins(false);
+        setMyThrew(false);
         setTime(0);
         setMyGrids(() => setBlankBoard());
         setEnemyGrids(() => setBlankBoard());
@@ -279,7 +278,7 @@ const Games = () => {
                 let throwRow = getRandomInt(10);
                 let throwCol = getRandomInt(9);
                 if(myGrids[throwRow][throwCol] !== 'hit' && myGrids[throwRow][throwCol] !== 'miss') {
-                    throwBomb(throwRow, throwCol);
+                    setTimeout(() => throwBomb(throwRow, throwCol), 1000);
                     tryThrow = false;
                 }
             }  
@@ -295,11 +294,13 @@ const Games = () => {
 
     // The function monitors my board and decides if computer wins
     useEffect(() => {
+
+
         if(placed === true && hitStart === true && calcWinner(myShipsPosition, myGrids) === true) {
             setHitStart(false);
             setSomeoneWins(true);
-            setTimeout(() => setTurn("Enemy Board"), 2000);
-            setTimeout(() => alert("Computer wins"), 2000);
+            setTimeout(() => setTurn("Enemy Board"), 1000);
+            setWinner('Computer');
         }
         if(nameMode) {
             storeLastData(myGrids, enemyGrids, myShipsPosition, enemyShipsPosition, time);
@@ -311,8 +312,8 @@ const Games = () => {
         if(placed === true && hitStart === true && calcWinner(enemyShipsPosition, enemyGrids) === true) {
             setHitStart(false);
             setSomeoneWins(true);
-            setTimeout(() => setTurn("My Board"), 2000);
-            setTimeout(() => alert("You win"), 2000);
+            setTimeout(() => setTurn("My Board"), 1000);
+            setWinner('You');
         }
         if(nameMode) {
             storeLastData(myGrids, enemyGrids, myShipsPosition, enemyShipsPosition, time);
@@ -323,7 +324,7 @@ const Games = () => {
     // The function clears the game data when there is a winner
     useEffect(() => {
         if(someoneWins) {
-            localStorage.removeItem(username);
+            localStorage.removeItem(nameMode);
         }
     },[someoneWins]);
 
@@ -331,7 +332,7 @@ const Games = () => {
     <div className='flex flex-col items-center justify-center pb-15 min-h-[calc(100vh-200px)]'>
         {path === "/game/easy" && <h1 className='mt-3 font-barrio text-2xl sm:text-3xl bg-yellow-800 w-fit px-3'>Easy Mode</h1>}
         {path === "/game/normal" && <h1 className='mt-3 font-barrio text-2xl sm:text-3xl bg-yellow-800 w-fit px-3'>Normal Mode</h1>}
-        
+
         <form onSubmit={handleSubmit} className={`${gameEnter === true && 'hidden'} flex-col gap-4 mt-5 bg-secondary/30 w-100 h-100 sm:w-150 sm:h-100 flex items-center justify-center rounded-2xl border-2 border-yellow-800`}>
             <input id='username' type="text" value={username} onChange={handleUsernameInput} className='border-3 text-black border-secondary text-center focus:border-yellow-800 focus:outline-none' placeholder='enter a username'/>
             <button className='border-3 px-2 h-fit w-fit hover:bg-yellow-800 cursor-pointer text-[15px] sm:text-xl' onClick={clickStartGame} type='submit'>Enter Game</button>
@@ -339,6 +340,7 @@ const Games = () => {
 
         <div className={`${gameEnter ? 'block' : 'hidden'} flex flex-col items-center`}>
             {/* !!!!!!design problem with game start */}
+            {someoneWins && <Alert winner={winner} startNew={clickReset}/>}
             <div className='fixed flex flex-col gap-2 items-center left-5 top-17 sm:top-30 bg-yellow-800/50 px-2 py-2 rounded-[5px] text-[15px] sm:text-xl'>
                 <Timer time={time}/>
                 <button className='border-3 px-2 hover:bg-yellow-800 cursor-pointer' onClick={hitOrPause} disabled={someoneWins || !placed}>{hitStart ? "Pause Game" : "Start Hit"}</button>
@@ -346,7 +348,7 @@ const Games = () => {
                 <button className='border-3 px-2 hover:bg-yellow-800 cursor-pointer' onClick={clickReset}>Reset</button>
             </div>
 
-            <h1 className="mt-3 w-80 sm:w-100 md:w-150">Notice: Due to the time limit for this project and the game creator's current capability, the ships on both boards will only be generated randomly by the website. Maybe it'll be upgraded in the future so you can choose the positions as you wish.</h1>
+            <h1 className="mt-3 w-80 sm:w-100 md:w-150">Notice: Due to the time limit for this project and the game creator's current capability, the ships on both boards will only be generated randomly by the website. Maybe it'll be upgraded in the future so you can choose the positions as you wish. I will also try to make computer's algorithm better.</h1>
 
             <div className='flex flex-col items-center sm:flex-row sm:justify-center sm:gap-4 md:gap-10'>
                 <Ships />
