@@ -408,8 +408,9 @@ const Games = () => {
         }
     },[someoneWins]);
 
+    const navigate = useNavigate();
+    
     const handleExit = () => {
-        const navigate = useNavigate();
         navigate('/');
     };
 
