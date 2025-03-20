@@ -1,7 +1,9 @@
-import { Link, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import { useEffect, useRef, useState } from "react";
 import MobileNav from "./components/MobileNav";
+import gameLogo from './assets/battleshiponline-logo.png';
+import navLogo from './assets/navigation-bar.png';
 
 const Header = () => {
   const [showNav,setShowNav] = useState(false);
@@ -44,7 +46,7 @@ const Header = () => {
     {/* header for desktop */}
     <header className="pt-[20px] hidden sm:flex sm:flex-col md:flex-row md:justify-between mb-6 items-center">
         <div className="flex gap-2 ">
-            <img className="filter-(--filter-logo) rounded-xl h-fit" src="/src/assets/battleshiponline-logo.png" alt="battleship-logo"/>
+            <img className="filter-(--filter-logo) rounded-xl h-fit" src={gameLogo} alt="battleship-logo"/>
             <h1 className="text-4xl md:text-5xl font-rubik-pixels mt-auto text-yellow-800">BattleShip Game</h1>
         </div>
         <NavBar />
@@ -55,7 +57,7 @@ const Header = () => {
     <header className="mt-5 sm:hidden flex items-center">
         <h1 className="text-3xl font-rubik-pixels text-yellow-800 flex-grow text-center">Battleship Game</h1>
       <button className="cursor-pointer" onClick={toggleNav} ref={toggleButtonRef}>
-        <img className="h-6" src="/src/assets/navigation-bar.png" alt="nav-bar"/>
+        <img className="h-6" src={navLogo} alt="nav-bar"/>
       </button>
     </header>
     {showNav && <MobileNav navRef={navRef}/>}

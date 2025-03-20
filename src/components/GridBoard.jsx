@@ -1,3 +1,7 @@
+import dotLogo from '../assets/dot-icon.png';
+import checkLogo from '../assets/check-icon.png';
+import xLogo from '../assets/x-mark.png';
+
 const GridBoard = ({playerBoard, playerWho, whosTurn, throwBomb, hitStart, path, threw, shipsCon}) => {
 
   return (
@@ -13,9 +17,9 @@ const GridBoard = ({playerBoard, playerWho, whosTurn, throwBomb, hitStart, path,
                                 className={`${shipsCon[rowIndex][columnIndex] === true ? 'bg-yellow-800' : 'bg-secondary'} w-6.5 h-6.5 md:w-8 md:h-8 border-2 border-primary 
                                 rounded-[4px] hover:bg-yellow-800`} onClick={() => throwBomb(rowIndex, columnIndex)}>
                                     {(playerBoard[rowIndex][columnIndex] === 'ship' && playerWho === 'My Board' && 
-                                    <img src="/src/assets/dot-icon.png"></img> ) ||
-                                    (playerBoard[rowIndex][columnIndex] === 'hit' && <img src="/src/assets/check-icon.png"></img>) ||
-                                    (playerBoard[rowIndex][columnIndex] === 'miss' && <img src="/src/assets/x-mark.png"></img>)}
+                                    <img src={dotLogo}></img> ) ||
+                                    (playerBoard[rowIndex][columnIndex] === 'hit' && <img src={checkLogo}></img>) ||
+                                    (playerBoard[rowIndex][columnIndex] === 'miss' && <img src={xLogo}></img>)}
                                 </div>
                             )
                         })
