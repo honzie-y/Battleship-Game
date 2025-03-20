@@ -5,7 +5,7 @@ const GridBoard = ({playerBoard, playerWho, whosTurn, throwBomb, hitStart, path,
         <h1 className='text-xl sm:text-2xl'>{playerWho}</h1>
         {playerBoard.map((row, rowIndex) => {
             return (
-                <div className='grid grid-cols-9 cursor-pointer' key={rowIndex}>
+                <div className='grid grid-cols-10 cursor-pointer' key={rowIndex}>
                     {
                         row.map((column, columnIndex) => {
                             return (

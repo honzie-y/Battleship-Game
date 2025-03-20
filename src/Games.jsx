@@ -51,7 +51,7 @@ const Games = () => {
     
     const rows = 10;
 
-    const columns = 9;
+    const columns = 10;
 
     const setBlankBoard = () => {
         const initialValue = [];
@@ -101,8 +101,8 @@ const Games = () => {
                 let direction = directions[getRandomInt(2)];
                 let placeable = true;
                 if(direction === 'horizontal') {
-                    let startRow = getRandomInt(10);
-                    let startCol = getRandomInt(10 - shipSpace);
+                    let startRow = getRandomInt(rows);
+                    let startCol = getRandomInt(columns + 1 - shipSpace);
                     for(let i = 0; i < shipSpace ; i++ ) {
                         if(newGrids[startRow][startCol + i] === 'ship') {
                             placeable = false;
@@ -132,8 +132,8 @@ const Games = () => {
                         cannotPlace = true;
                     }
                 } else {
-                    let startRow = getRandomInt(11 - shipSpace);
-                    let startCol = getRandomInt(9);
+                    let startRow = getRandomInt(rows + 1 - shipSpace);
+                    let startCol = getRandomInt(columns);
                     for(let i = 0; i < shipSpace; i++) {
                         if(newGrids[startRow + i][startCol] === 'ship') {
                             placeable = false;
@@ -346,8 +346,8 @@ const Games = () => {
         if(turn === 'Enemy Board' && hitStart) {
             let tryThrow = true;
             while(tryThrow) {
-                let throwRow = getRandomInt(10);
-                let throwCol = getRandomInt(9);
+                let throwRow = getRandomInt(rows);
+                let throwCol = getRandomInt(columns);
                 if(myGrids[throwRow][throwCol] !== 'hit' && myGrids[throwRow][throwCol] !== 'miss') {
                     if(path === '/game/normal') {
                         setTimeout(() => throwBomb(throwRow, throwCol), 1000);
