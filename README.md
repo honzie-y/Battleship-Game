@@ -1,3 +1,3 @@
-Battleship Game - project 2
+Battleship Game
 
-I implemented "3 Bonus Points: Local Storage".
+Website URL: https://battleship-game-project2.onrender.com/
