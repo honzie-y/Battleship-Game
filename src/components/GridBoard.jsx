@@ -1,6 +1,6 @@
 const GridBoard = ({playerBoard, playerWho, whosTurn, throwBomb, hitStart, path, threw}) => {
   return (
-    <div className={`${hitStart && !threw ? '' : 'pointer-events-none'} ${whosTurn === playerWho && path === '/game/normal' ? "hidden" : ""} w-fit mt-6`}>
+    <div className={`${hitStart && !threw ? '' : 'pointer-events-none'} ${whosTurn === playerWho && path === '/game/normal'  ? "hidden" : ""} w-fit mt-6`}>
         <h1 className='text-xl sm:text-2xl'>{playerWho}</h1>
         {playerBoard.map((row, rowIndex) => {
             return (

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Timer from './components/Timer';
 import GridBoard from './components/GridBoard';
 import Ships from './components/Ships';
@@ -15,7 +15,9 @@ const Games = () => {
 
     const [hitStart, setHitStart] = useState(false);
 
-    const [turn, setTurn] = useState('Enemy Board');
+    const [restart, setRestart] = useState(false);
+
+    const [turn, setTurn] = useState('');
 
     const [placed, setPlaced] = useState(false);
 
@@ -33,7 +35,7 @@ const Games = () => {
 
     const [winner, setWinner] = useState('');
 
-    const {nameMode, setNameMode, hasHistory, setHasHistory, storeLastData, getLastData, removeData} = useContext(HistoryContext);
+    const {nameMode, setNameMode, hasHistory, setHasHistory ,storeLastData, getLastData, removeData} = useContext(HistoryContext);
 
     useEffect(() => {
         let intervalId;
@@ -66,7 +68,6 @@ const Games = () => {
     const [myGrids, setMyGrids] = useState(() => setBlankBoard());
 
     const [enemyGrids, setEnemyGrids] = useState(() => setBlankBoard());
-    
 
     // const valueTypes = ["blank", "ship", "hit", "miss"];
 
@@ -179,14 +180,14 @@ const Games = () => {
     
            
             if(turn === "My Board") {
-                setEnemyGrids(newGrids);
                 setMyThrew(true);
+                setEnemyGrids(newGrids);
                 if(path === '/game/normal') {
                     setTimeout(() => setTurn("Enemy Board"), 500); 
                 } else {
                     setTurn("Enemy Board");
                 }
-            } else {
+            } else { 
                 setMyThrew(false);
                 setMyGrids(newGrids);
                 if(path === '/game/normal') {
@@ -202,7 +203,12 @@ const Games = () => {
     const hitOrPause = () => {
         //if(placed === true) {
             setHitStart(!hitStart);
-            if(turn === 'Enemy Board') setTurn('My Board');
+            setRestart(false);
+            if(myThrew === false) {
+                setTurn("My Board");
+            } else {
+                setTurn("Enemy Board");
+            }
         //}   
     };
 
@@ -212,7 +218,7 @@ const Games = () => {
                     randomPlaceShips(myGrids);
                     randomPlaceShips(enemyGrids);
                 } else {
-                    const {latestMyGrid, latestEnemyGrid, latestMyPos, latestEnemyPos, lastTime} = JSON.parse(getLastData(nameMode));
+                    const {latestMyGrid, latestEnemyGrid, latestMyPos, latestEnemyPos, lastTime, lastThrew} = JSON.parse(getLastData(nameMode));
                     if(latestMyPos.length === 0 && latestEnemyPos.length === 0) {
                         randomPlaceShips(myGrids);
                         randomPlaceShips(enemyGrids);
@@ -222,6 +228,7 @@ const Games = () => {
                         setMyShipsPosition(latestMyPos);
                         setEnemyShipsPosition(latestEnemyPos);
                         setTime(lastTime);
+                        setMyThrew(lastThrew);
                         setHasHistory(true);
                     }
                 }
@@ -232,6 +239,7 @@ const Games = () => {
     const clickReset = () => {
         setHitStart(false);
         setPlaced(false);
+        setRestart(true);
         setSomeoneWins(false);
         setMyThrew(false);
         setHasHistory(false);
@@ -281,7 +289,11 @@ const Games = () => {
                 let throwRow = getRandomInt(10);
                 let throwCol = getRandomInt(9);
                 if(myGrids[throwRow][throwCol] !== 'hit' && myGrids[throwRow][throwCol] !== 'miss') {
-                    setTimeout(() => throwBomb(throwRow, throwCol), 1000);
+                    if(path === '/game/normal') {
+                        setTimeout(() => throwBomb(throwRow, throwCol), 1000);
+                    } else {
+                        throwBomb(throwRow, throwCol);
+                    }
                     tryThrow = false;
                 }
             }  
@@ -298,9 +310,12 @@ const Games = () => {
             setTimeout(() => setTurn("Enemy Board"), 1000);
             setWinner('Computer');
         }
-        if(nameMode && hitStart) {
-            storeLastData(myGrids, enemyGrids, myShipsPosition, enemyShipsPosition, time);
+
+        if(nameMode && (hitStart || restart)) {
+            storeLastData(myGrids, enemyGrids, myShipsPosition, enemyShipsPosition, time, myThrew);
         }
+
+
     }, [myGrids]);
 
     // The function monitors enemy's board and decides if I win
@@ -311,8 +326,8 @@ const Games = () => {
             setTimeout(() => setTurn("My Board"), 1000);
             setWinner('You');
         }
-        if(nameMode && hitStart) {
-            storeLastData(myGrids, enemyGrids, myShipsPosition, enemyShipsPosition, time);
+        if(nameMode && (hitStart || restart)) {
+            storeLastData(myGrids, enemyGrids, myShipsPosition, enemyShipsPosition, time, myThrew);
         }
     }, [enemyGrids]);
 

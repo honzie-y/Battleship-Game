@@ -8,8 +8,8 @@ export const HistoryProvider = ({children}) => {
 
     const [hasHistory, setHasHistory] = useState(false);
 
-    const storeLastData = (latestMyGrid, latestEnemyGrid, latestMyPos, latestEnemyPos, lastTime) => {
-        const latestData = {latestMyGrid, latestEnemyGrid, latestMyPos, latestEnemyPos, lastTime};
+    const storeLastData = (latestMyGrid, latestEnemyGrid, latestMyPos, latestEnemyPos, lastTime, lastThrew) => {
+        const latestData = {latestMyGrid, latestEnemyGrid, latestMyPos, latestEnemyPos, lastTime, lastThrew};
         localStorage.setItem(nameMode, JSON.stringify(latestData));
     };
 
@@ -22,7 +22,7 @@ export const HistoryProvider = ({children}) => {
     }
 
     return (
-        <HistoryContext.Provider value={{nameMode, setNameMode, hasHistory, setHasHistory, storeLastData, getLastData, removeData}}>
+        <HistoryContext.Provider value={{nameMode, setNameMode, hasHistory, setHasHistory,storeLastData, getLastData, removeData}}>
             {children}
         </HistoryContext.Provider>
     );
