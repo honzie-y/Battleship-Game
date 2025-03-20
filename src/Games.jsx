@@ -65,9 +65,25 @@ const Games = () => {
         return initialValue;
     }
 
+    const setNoHitBoard = () => {
+        const initialValue = [];
+        for(let i = 0; i < rows; i++) {
+            const row = [];
+            for(let j = 0; j < columns; j++) {
+                row.push(false);
+            }
+            initialValue.push(row);
+        }
+        return initialValue;
+    }
+
     const [myGrids, setMyGrids] = useState(() => setBlankBoard());
 
     const [enemyGrids, setEnemyGrids] = useState(() => setBlankBoard());
+
+    const [myShipsCon, setMyShipsCon] = useState(() => setNoHitBoard());
+
+    const [enemyShipsCon, setEnemyShipsCon] = useState(() => setNoHitBoard());
 
     // const valueTypes = ["blank", "ship", "hit", "miss"];
 
@@ -218,7 +234,7 @@ const Games = () => {
                     randomPlaceShips(myGrids);
                     randomPlaceShips(enemyGrids);
                 } else {
-                    const {latestMyGrid, latestEnemyGrid, latestMyPos, latestEnemyPos, lastTime, lastThrew} = JSON.parse(getLastData(nameMode));
+                    const {latestMyGrid, latestEnemyGrid, latestMyPos, latestEnemyPos, latestMyShipsCon, latestEnemyShipsCon ,lastTime, lastThrew} = JSON.parse(getLastData(nameMode));
                     if(latestMyPos.length === 0 && latestEnemyPos.length === 0) {
                         randomPlaceShips(myGrids);
                         randomPlaceShips(enemyGrids);
@@ -227,6 +243,8 @@ const Games = () => {
                         setEnemyGrids(latestEnemyGrid);
                         setMyShipsPosition(latestMyPos);
                         setEnemyShipsPosition(latestEnemyPos);
+                        setMyShipsCon(latestMyShipsCon);
+                        setEnemyShipsCon(latestEnemyShipsCon);
                         setTime(lastTime);
                         setMyThrew(lastThrew);
                         setHasHistory(true);
@@ -248,6 +266,8 @@ const Games = () => {
         setEnemyGrids(() => setBlankBoard());
         setMyShipsPosition([]);
         setEnemyShipsPosition([]);
+        setMyShipsCon(() => setNoHitBoard());
+        setEnemyShipsCon(() => setNoHitBoard());
         setTurn("Enemy Board");
     };
 
@@ -271,6 +291,46 @@ const Games = () => {
         }
         return true;
     };
+
+    const calcSunkShip = (shipsPosition, gridBoard, shipsCon) => {
+        const newShipsCon = [...shipsCon];
+        for(const shipPos of shipsPosition) {
+            if(shipPos.direction === 'horizontal') {
+                let sink = true;
+                const startRow = shipPos.startRow;
+                const startCol = shipPos.startCol;
+                for(let i = 0; i < shipPos.shipSpace; i++) {
+                    if(gridBoard[startRow][startCol + i] === 'ship') {
+                      sink = false;
+                    }
+                }
+                if(sink) {
+                    for(let i = 0; i < shipPos.shipSpace; i++) {
+                        newShipsCon[startRow][startCol + i] = true;
+                    }
+                }
+            } else {
+                let sink = true;
+                const startRow = shipPos.startRow;
+                const startCol = shipPos.startCol;
+                for(let i = 0; i < shipPos.shipSpace; i++) {
+                    if(gridBoard[startRow + i][startCol] === 'ship') {
+                      sink = false;
+                    }
+                }
+                if(sink) {
+                    for(let i = 0; i < shipPos.shipSpace; i++) {
+                        newShipsCon[startRow + i][startCol] = true;
+                    }
+                }
+            }
+        }
+        if(shipsCon === myShipsCon) {
+            setMyShipsCon(newShipsCon);
+        } else {
+            setEnemyShipsCon(newShipsCon);
+        }
+    }
 
     const handleUsernameInput = (e) => {
         setUsername(e.target.value);
@@ -311,8 +371,12 @@ const Games = () => {
             setWinner('Computer');
         }
 
+        if(placed === true && hitStart === true) {
+            calcSunkShip(myShipsPosition, myGrids, myShipsCon);
+        }
+
         if(nameMode && (hitStart || restart)) {
-            storeLastData(myGrids, enemyGrids, myShipsPosition, enemyShipsPosition, time, myThrew);
+            storeLastData(myGrids, enemyGrids, myShipsPosition, enemyShipsPosition, myShipsCon, enemyShipsCon ,time, myThrew);
         }
 
 
@@ -326,8 +390,13 @@ const Games = () => {
             setTimeout(() => setTurn("My Board"), 1000);
             setWinner('You');
         }
+
+        if(placed === true && hitStart === true) {
+            calcSunkShip(enemyShipsPosition, enemyGrids, enemyShipsCon);
+        }
+
         if(nameMode && (hitStart || restart)) {
-            storeLastData(myGrids, enemyGrids, myShipsPosition, enemyShipsPosition, time, myThrew);
+            storeLastData(myGrids, enemyGrids, myShipsPosition, enemyShipsPosition, myShipsCon, enemyShipsCon, time, myThrew);
         }
     }, [enemyGrids]);
 
@@ -369,8 +438,8 @@ const Games = () => {
 
             <div className='flex flex-col items-center sm:flex-row sm:justify-center sm:gap-4 md:gap-10'>
                 <Ships />
-                {path === '/game/normal' && <GridBoard playerBoard={myGrids} playerWho={"My Board"} whosTurn={turn} path={path}/>}
-                <GridBoard playerBoard={enemyGrids} playerWho={"Enemy Board"} whosTurn={turn} throwBomb={throwBomb} hitStart={hitStart} path={path} threw={myThrew}/>
+                {path === '/game/normal' && <GridBoard playerBoard={myGrids} playerWho={"My Board"} whosTurn={turn} path={path} shipsCon={myShipsCon}/>}
+                <GridBoard playerBoard={enemyGrids} playerWho={"Enemy Board"} whosTurn={turn} throwBomb={throwBomb} hitStart={hitStart} path={path} threw={myThrew} shipsCon={enemyShipsCon}/>
             </div>
         </div>
             

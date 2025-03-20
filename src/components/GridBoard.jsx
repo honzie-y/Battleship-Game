@@ -1,4 +1,5 @@
-const GridBoard = ({playerBoard, playerWho, whosTurn, throwBomb, hitStart, path, threw}) => {
+const GridBoard = ({playerBoard, playerWho, whosTurn, throwBomb, hitStart, path, threw, shipsCon}) => {
+
   return (
     <div className={`${hitStart && !threw ? '' : 'pointer-events-none'} ${whosTurn === playerWho && path === '/game/normal'  ? "hidden" : ""} w-fit mt-6`}>
         <h1 className='text-xl sm:text-2xl'>{playerWho}</h1>
@@ -9,8 +10,8 @@ const GridBoard = ({playerBoard, playerWho, whosTurn, throwBomb, hitStart, path,
                         row.map((column, columnIndex) => {
                             return (
                                 <div key={`${rowIndex}-${columnIndex}`} 
-                                className='bg-secondary w-6.5 h-6.5 md:w-8 md:h-8 border-2 border-primary 
-                                rounded-[4px] hover:bg-yellow-800' onClick={() => throwBomb(rowIndex, columnIndex)}>
+                                className={`${shipsCon[rowIndex][columnIndex] === true ? 'bg-yellow-800' : 'bg-secondary'} w-6.5 h-6.5 md:w-8 md:h-8 border-2 border-primary 
+                                rounded-[4px] hover:bg-yellow-800`} onClick={() => throwBomb(rowIndex, columnIndex)}>
                                     {(playerBoard[rowIndex][columnIndex] === 'ship' && playerWho === 'My Board' && 
                                     <img src="/src/assets/dot-icon.png"></img> ) ||
                                     (playerBoard[rowIndex][columnIndex] === 'hit' && <img src="/src/assets/check-icon.png"></img>) ||
