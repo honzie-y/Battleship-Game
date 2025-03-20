@@ -4,6 +4,7 @@ import Header from "./Header";
 import GameRules from "./GameRules";
 import HighScores from "./HighScores";
 import Games from "./Games";
+import { HistoryProvider } from "./context/HistoryContext";
 
 function App() {
   return (

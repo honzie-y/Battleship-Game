@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Timer from './components/Timer';
 import GridBoard from './components/GridBoard';
 import Ships from './components/Ships';
 import Alert from './components/Alert';
+import { HistoryContext } from './context/HistoryContext';
 
 const Games = () => {
     const location = useLocation();
@@ -24,8 +25,6 @@ const Games = () => {
 
     const [username, setUsername] = useState('');
 
-    const [nameMode, setNameMode] = useState('');
-
     const [someoneWins, setSomeoneWins] = useState(false);
 
     const [time, setTime] = useState(0);
@@ -33,6 +32,8 @@ const Games = () => {
     const [myThrew, setMyThrew] = useState(false);
 
     const [winner, setWinner] = useState('');
+
+    const {nameMode, setNameMode, hasHistory, setHasHistory, storeLastData, getLastData, removeData} = useContext(HistoryContext);
 
     useEffect(() => {
         let intervalId;
@@ -207,11 +208,11 @@ const Games = () => {
 
     const clickToPlace = () => {
             //if(placed === false) {
-                if(localStorage.getItem(nameMode) === null) {
+                if(getLastData(nameMode) === null) {
                     randomPlaceShips(myGrids);
                     randomPlaceShips(enemyGrids);
                 } else {
-                    const {latestMyGrid, latestEnemyGrid, latestMyPos, latestEnemyPos, time} = JSON.parse(localStorage.getItem(nameMode));
+                    const {latestMyGrid, latestEnemyGrid, latestMyPos, latestEnemyPos, lastTime} = JSON.parse(getLastData(nameMode));
                     if(latestMyPos.length === 0 && latestEnemyPos.length === 0) {
                         randomPlaceShips(myGrids);
                         randomPlaceShips(enemyGrids);
@@ -220,7 +221,8 @@ const Games = () => {
                         setEnemyGrids(latestEnemyGrid);
                         setMyShipsPosition(latestMyPos);
                         setEnemyShipsPosition(latestEnemyPos);
-                        setTime(time);
+                        setTime(lastTime);
+                        setHasHistory(true);
                     }
                 }
                 setPlaced(true);
@@ -232,6 +234,7 @@ const Games = () => {
         setPlaced(false);
         setSomeoneWins(false);
         setMyThrew(false);
+        setHasHistory(false);
         setTime(0);
         setMyGrids(() => setBlankBoard());
         setEnemyGrids(() => setBlankBoard());
@@ -286,15 +289,8 @@ const Games = () => {
 
     }, [turn]);
 
-
-    const storeLastData = (latestMyGrid, latestEnemyGrid, latestMyPos, latestEnemyPos, time) => {
-        const latestData = {latestMyGrid, latestEnemyGrid, latestMyPos, latestEnemyPos, time};
-        localStorage.setItem(nameMode, JSON.stringify(latestData));
-    };
-
     // The function monitors my board and decides if computer wins
     useEffect(() => {
-
 
         if(placed === true && hitStart === true && calcWinner(myShipsPosition, myGrids) === true) {
             setHitStart(false);
@@ -302,7 +298,7 @@ const Games = () => {
             setTimeout(() => setTurn("Enemy Board"), 1000);
             setWinner('Computer');
         }
-        if(nameMode) {
+        if(nameMode && hitStart) {
             storeLastData(myGrids, enemyGrids, myShipsPosition, enemyShipsPosition, time);
         }
     }, [myGrids]);
@@ -315,7 +311,7 @@ const Games = () => {
             setTimeout(() => setTurn("My Board"), 1000);
             setWinner('You');
         }
-        if(nameMode) {
+        if(nameMode && hitStart) {
             storeLastData(myGrids, enemyGrids, myShipsPosition, enemyShipsPosition, time);
         }
     }, [enemyGrids]);
@@ -324,9 +320,14 @@ const Games = () => {
     // The function clears the game data when there is a winner
     useEffect(() => {
         if(someoneWins) {
-            localStorage.removeItem(nameMode);
+            removeData(nameMode);
         }
     },[someoneWins]);
+
+    const handleExit = () => {
+        const navigate = useNavigate();
+        navigate('/');
+    };
 
   return (
     <div className='flex flex-col items-center justify-center pb-15 min-h-[calc(100vh-200px)]'>
@@ -340,7 +341,8 @@ const Games = () => {
 
         <div className={`${gameEnter ? 'block' : 'hidden'} flex flex-col items-center`}>
             {/* !!!!!!design problem with game start */}
-            {someoneWins && <Alert winner={winner} startNew={clickReset}/>}
+            {hasHistory && <Alert text={'Your history is restored'} leftButton={'Start a new game'} rightButton={'Continue'} handleLeft={clickReset} handleRight={() => setHasHistory(false)}/>}
+            {someoneWins && <Alert text={winner === 'You' ? 'You win!' : 'Computer wins😭'} leftButton={'Exit'} rightButton={'Start a new game'} handleLeft={handleExit} handleRight={clickReset}/>}
             <div className='fixed flex flex-col gap-2 items-center left-5 top-17 sm:top-30 bg-yellow-800/50 px-2 py-2 rounded-[5px] text-[15px] sm:text-xl'>
                 <Timer time={time}/>
                 <button className='border-3 px-2 hover:bg-yellow-800 cursor-pointer' onClick={hitOrPause} disabled={someoneWins || !placed}>{hitStart ? "Pause Game" : "Start Hit"}</button>
