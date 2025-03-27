@@ -13,39 +13,6 @@
 
   --color-primary:#342f2f;
   --color-secondary: #8d8c8c;
-
-  --animate-appear: appear 3s forwards;
-  --animate-disappear: disappear 3s forwards;
-  
-  @keyframes appear {
-    0% {
-      opacity: 0%;
-      visibility:hidden;
-    }
-    50% {
-      opacity: 0%;
-      visibility:hidden;
-    }
-    100% {
-      opacity: 100%;
-      visibility:visible;
-    }
-  }
-
-  @keyframes disappear {
-    0% {
-      opacity:100%;
-      visibility:visible;
-    }
-    50% {
-      opacity: 100%;
-      visibility:visible;
-    }
-    100% {
-      opacity:0%;
-      visibility:hidden;
-    }
-  }
 }
 
 :root {

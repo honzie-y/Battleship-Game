@@ -45,7 +45,7 @@ const Header = () => {
     <>
     {/* header for desktop */}
     <header className="pt-[20px] hidden sm:flex sm:flex-col md:flex-row md:justify-between mb-6 items-center">
-        <div className="flex gap-2 ">
+        <div className="flex gap-2">
             <img className="filter-(--filter-logo) rounded-xl h-fit" src={gameLogo} alt="battleship-logo"/>
             <h1 className="text-4xl md:text-5xl font-rubik-pixels mt-auto text-yellow-800">BattleShip Game</h1>
         </div>
