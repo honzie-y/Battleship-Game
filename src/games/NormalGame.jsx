@@ -113,7 +113,7 @@ const NormalGame = () => {
             });
         }
 
-        if(!hitStart) {
+        if(!placed) {
             updateCoAndPos();
         }
         
@@ -272,7 +272,7 @@ const NormalGame = () => {
 
     const [restart, setRestart] = useState(false);
 
-    const [turn, setTurn] = useState('');
+    const [turn, setTurn] = useState('Enemy Board');
 
     const [placed, setPlaced] = useState(false);
 
@@ -524,7 +524,7 @@ const NormalGame = () => {
         setEnemyShipsPosition([]);
         setMyShipsCon(() => setNoHitBoard());
         setEnemyShipsCon(() => setNoHitBoard());
-        setTurn("");
+        setTurn("Enemy Board");
     };
 
     const calcWinner = (positions, gridBoard) => {
