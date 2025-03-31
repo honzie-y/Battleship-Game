@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import Timer from './components/Timer';
-import GridBoard from './components/GridBoard';
-import Ships from './components/Ships';
-import Alert from './components/Alert';
-import { HistoryContext } from './context/HistoryContext';
+import Timer from '../components/Timer';
+import GridBoard from '../components/GridBoard';
+import StaticShips from '../components/StaticShips';
+import Alert from '../components/Alert';
+import { HistoryContext } from '../context/HistoryContext';
 
-const Games = () => {
+const EasyGame = () => {
     const location = useLocation();
     
     const path = location.pathname;
@@ -198,20 +198,11 @@ const Games = () => {
             if(turn === "My Board") {
                 setMyThrew(true);
                 setEnemyGrids(newGrids);
-                if(path === '/game/normal') {
-                    setTimeout(() => setTurn("Enemy Board"), 500); 
-                } else {
-                    setTurn("Enemy Board");
-                }
+                setTurn("Enemy Board");
             } else { 
                 setMyThrew(false);
                 setMyGrids(newGrids);
-                if(path === '/game/normal') {
-                    setTimeout(() => setTurn("My Board"), 1000);
-                } else {
-                    setTurn("My Board");
-                }
-                
+                setTurn("My Board");             
             }
         }
     };
@@ -349,11 +340,7 @@ const Games = () => {
                 let throwRow = getRandomInt(rows);
                 let throwCol = getRandomInt(columns);
                 if(myGrids[throwRow][throwCol] !== 'hit' && myGrids[throwRow][throwCol] !== 'miss') {
-                    if(path === '/game/normal') {
-                        setTimeout(() => throwBomb(throwRow, throwCol), 1000);
-                    } else {
-                        throwBomb(throwRow, throwCol);
-                    }
+                    throwBomb(throwRow, throwCol);
                     tryThrow = false;
                 }
             }  
@@ -416,8 +403,7 @@ const Games = () => {
 
   return (
     <div className='flex flex-col items-center justify-center pb-15 min-h-[calc(100vh-200px)]'>
-        {path === "/game/easy" && <h1 className='mt-3 font-barrio text-2xl sm:text-3xl bg-yellow-800 w-fit px-3'>Easy Mode</h1>}
-        {path === "/game/normal" && <h1 className='mt-3 font-barrio text-2xl sm:text-3xl bg-yellow-800 w-fit px-3'>Normal Mode</h1>}
+        <h1 className='mt-3 font-barrio text-2xl sm:text-3xl bg-yellow-800 w-fit px-3'>Easy Mode</h1>
 
         <form onSubmit={handleSubmit} className={`${gameEnter === true && 'hidden'} flex-col gap-4 mt-5 bg-secondary/30 w-100 h-100 sm:w-150 sm:h-100 flex items-center justify-center rounded-2xl border-2 border-yellow-800`}>
             <input id='username' type="text" value={username} onChange={handleUsernameInput} className='border-3 text-black border-secondary text-center focus:border-yellow-800 focus:outline-none' placeholder='enter a username'/>
@@ -435,11 +421,10 @@ const Games = () => {
                 <button className='border-3 px-2 hover:bg-yellow-800 cursor-pointer' onClick={clickReset}>Reset</button>
             </div>
 
-            <h1 className="mt-3 w-80 sm:w-100 md:w-150">Notice: Due to the time limit for this project and the game creator's current capability, the ships on both boards will only be generated randomly by the website. Maybe it'll be upgraded in the future so you can choose the positions as you wish. I will also try to make computer's algorithm better.</h1>
+            <h1 className="mt-3 w-80 sm:w-100 md:w-150">Notice: I will try to make computer's algorithm better.</h1>
 
             <div className='flex flex-col items-center sm:flex-row sm:justify-center sm:gap-4 md:gap-10'>
-                <Ships />
-                {path === '/game/normal' && <GridBoard playerBoard={myGrids} playerWho={"My Board"} whosTurn={turn} path={path} shipsCon={myShipsCon}/>}
+                <StaticShips />
                 <GridBoard playerBoard={enemyGrids} playerWho={"Enemy Board"} whosTurn={turn} throwBomb={throwBomb} hitStart={hitStart} path={path} threw={myThrew} shipsCon={enemyShipsCon}/>
             </div>
         </div>
@@ -448,4 +433,4 @@ const Games = () => {
   )
 }
 
-export default Games;
+export default EasyGame;

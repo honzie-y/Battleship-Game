@@ -3,8 +3,8 @@ import Home from "./Home";
 import Header from "./Header";
 import GameRules from "./GameRules";
 import HighScores from "./HighScores";
-import Games from "./Games";
-import { HistoryProvider } from "./context/HistoryContext";
+import EasyGame from "./games/EasyGame";
+import NormalGame from "./games/NormalGame";
 
 function App() {
   return (
@@ -12,8 +12,8 @@ function App() {
       <Routes>
         <Route element={<Header/>}>
           <Route path="/" element={<Home/>}/>
-          <Route path="/game/easy" element={<Games/>}/>
-          <Route path="/game/normal" element={<Games/>}/>
+          <Route path="/game/easy" element={<EasyGame/>}/>
+          <Route path="/game/normal" element={<NormalGame/>}/>
           <Route path="/rules" element={<GameRules/>}/>
           <Route path="/highscores" element={<HighScores />}/>
         </Route>
